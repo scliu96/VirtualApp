@@ -13,6 +13,7 @@ public class RefStaticMethod<T> {
             Class<?>[] types = field.getAnnotation(MethodParams.class).value();
             for (int i = 0; i < types.length; i++) {
                 Class<?> clazz = types[i];
+                // 若 clazz 是在 hostApk 中加载的，则需替换为 real clazz
                 if (clazz.getClassLoader() == getClass().getClassLoader()) {
                     try {
                         Class.forName(clazz.getName());
@@ -34,6 +35,7 @@ public class RefStaticMethod<T> {
                 Class<?> type = getProtoType(typeNames[i]);
                 if (type == null) {
                     try {
+                        // 在 hostApk 中加载该类
                         type = Class.forName(typeNames[i]);
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
